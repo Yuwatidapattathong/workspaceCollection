@@ -1,0 +1,322 @@
+{
+	"info": {
+		"_postman_id": "e5b69d77-b488-447e-a0cc-bd39cd4f1a8f",
+		"name": "Workspace",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4302ac70-b84a-4881-b87b-c105ec34c463",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody)",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.octoperf.com/public/users/login?password=tae5712258129&username=samkoompim%40gmail.com",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"public",
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "password",
+							"value": "tae5712258129"
+						},
+						{
+							"key": "username",
+							"value": "samkoompim%40gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "workspaceMembersByWorkdpaceID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab264d71-5506-4775-a6b6-1923610a4248",
+						"exec": [
+							"var data = pm.response.json();",
+							"console.log(data[0].id)",
+							"postman.setEnviromentVariable(\"id\",data[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.octoperf.com/workspaces/members/by-workspace/{{workspaceId}}\n\n",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"workspaces",
+						"members",
+						"by-workspace",
+						"{{workspaceId}}\n\n"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": " WorkspaceMember",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ed4bcb84-a4e6-4b49-b59b-020c3a06b625",
+						"exec": [
+							"pm.test(\"Verify status Code\", function(){",
+							"    pm.response.to.have.status(200)",
+							"}",
+							")",
+							"",
+							"//verify response code using expect function",
+							"",
+							"pm.test(\"Verify Code\", function(){",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"})",
+							"",
+							"// verify",
+							"pm.test(\"Verify Key components\", () =>{ ",
+							"    var data = JSON.parse(responseBody);",
+							"    data.forEach(function(results){",
+							"        pm.expect(results).to.have.all.keys('created','description','id','lastModified','name','userId')",
+							"    })",
+							"})",
+							"",
+							"",
+							"pm.test(\"Verify name response\", ()=>{ ",
+							"    var data = pm.response.json();",
+							"    pm.expect(data[0].name).to.equal('NewWorkspaceCreate');",
+							"})",
+							"",
+							"pm.test(\"Verify name, id, userId response\", ()=>{ ",
+							"    var data = pm.response.json();",
+							"    pm.expect(data[0].id).to.equal('AwxygnQBJAj-hbsa8uvW');",
+							"    pm.expect(data[0].name).to.equal('NewWorkspaceCreate');",
+							"    pm.expect(data[0].userId).to.equal('AgxygnQBJAj-hbsa8uue');",
+							"})",
+							"",
+							"//verify Content type Headers",
+							"",
+							"pm.test(\"Verify Content-type is present\", ()=>{ ",
+							"    pm.response.to.have.header(\"Content-Type\")",
+							"}",
+							")",
+							"",
+							"pm.test(\"Verify Content-type is application Json\", ()=>{ ",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+							"",
+							"",
+							"    //Assert Enviroment",
+							"    pm.test(\"Verify Enviroment\",()=>{ ",
+							"        pm.expect(pm.environment.name).to.equal(\"QAEnviroment\")",
+							"    }",
+							"    )",
+							"}",
+							")",
+							"// validate Response structure",
+							"const schema ={",
+							"    \"type\": \"array\",",
+							"  \"items\": [",
+							"    {",
+							"      \"type\": \"object\",",
+							"      \"properties\": {",
+							"        \"created\": {",
+							"          \"type\": \"integer\"",
+							"        },",
+							"        \"description\": {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        \"id\": {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        \"lastModified\": {",
+							"          \"type\": \"integer\"",
+							"        },",
+							"        \"name\": {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        \"userId\": {",
+							"          \"type\": \"string\"",
+							"        }",
+							"      },",
+							"      \"required\": [",
+							"        \"created\",",
+							"        \"description\",",
+							"        \"id\",",
+							"        \"lastModified\",",
+							"        \"name\",",
+							"        \"userId\"",
+							"      ]",
+							"    }",
+							"  ]",
+							"};",
+							"",
+							"pm.test('Verify Schema is valid',function(){ ",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"})",
+							"",
+							"var data = pm.response.json();",
+							"postman.setEnviromentVariable(\"workspaceId\",data[0].id)",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.octoperf.com/workspaces/member-of",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"workspaces",
+						"member-of"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "workspaceMembersID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.octoperf.com/workspaces/members/{{id}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"workspaces",
+						"members",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateNewUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d282eb05-05a3-4a79-a3dc-d71432919573",
+						"exec": [
+							"var data = pm.response.json();",
+							"",
+							"postman.setEnviromentVariable(\"userId\", data.userId);",
+							"postman.setEnviromentVariable(\"workspaceId\", data.workspaceId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.octoperf.com/workspaces/members/by-workspace/{{workspaceId}}/by-usernames?username=test%40@gmail.com",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"workspaces",
+						"members",
+						"by-workspace",
+						"{{workspaceId}}",
+						"by-usernames"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "test%40@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
